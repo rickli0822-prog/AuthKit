@@ -1,0 +1,63 @@
+name: Field Sample
+description: Share a privacy-reviewed field case that can improve AuthKit diagnostics.
+title: "[Field Sample] "
+labels: ["field-sample", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Field samples help AuthKit become useful faster. Only share data you are
+        allowed to share, and remove customer-identifying details before posting.
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: Client
+      options:
+        - Codex
+        - Claude Code
+        - Gemini
+        - Cursor
+        - VS Code
+        - Multiple
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - AuthKit correctly identified the cause
+        - AuthKit found the cause but wording was unclear
+        - AuthKit missed the cause
+        - AuthKit suggested an unsafe or wrong repair
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: sanitized_bundle
+    attributes:
+      label: Sanitized support bundle
+      description: Attach or paste a privacy-reviewed support bundle if possible.
+      render: json
+
+  - type: textarea
+    id: field_notes
+    attributes:
+      label: Field notes
+      description: Explain the real root cause, final fix, and how success was verified.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy review
+      options:
+        - label: I reviewed the sample for tokens, credentials, emails, hostnames, customer names, and local usernames.
+          required: true
+        - label: I am allowed to share this sample publicly.
+          required: true

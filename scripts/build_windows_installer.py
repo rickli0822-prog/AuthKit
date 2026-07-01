@@ -8,11 +8,16 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import shutil
 import subprocess
 import sys
-import tomllib
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 compatibility.
+    tomllib = None
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -81,8 +86,14 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _project_version() -> str:
-    data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    return str(data["project"]["version"])
+    text = (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    if tomllib is not None:
+        data = tomllib.loads(text)
+        return str(data["project"]["version"])
+    match = re.search(r'(?m)^version\s*=\s*"([^"]+)"\s*$', text)
+    if not match:
+        raise RuntimeError("Could not read project version from pyproject.toml")
+    return match.group(1)
 
 
 def _require_pyinstaller() -> str:

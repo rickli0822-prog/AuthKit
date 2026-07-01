@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 故障分类说明
-    url: https://github.com/YOUR_USERNAME/authkit/blob/main/docs/diagnosis-cases.md
-    about: 查看 Case A–F 与常见修复方式
-  - name: 贡献指南
-    url: https://github.com/YOUR_USERNAME/authkit/blob/main/CONTRIBUTING.md
-    about: 如何本地开发与提交 PR
+  - name: Diagnosis cases
+    url: https://github.com/rickli0822-prog/AuthKit/blob/main/docs/diagnosis-cases.md
+    about: Read the current diagnosis case map before filing broad troubleshooting questions.
+  - name: Support bundle contract
+    url: https://github.com/rickli0822-prog/AuthKit/blob/main/docs/SUPPORT_BUNDLE.md
+    about: Learn what AuthKit support bundles include and how privacy redaction works.
+  - name: Contributing guide
+    url: https://github.com/rickli0822-prog/AuthKit/blob/main/CONTRIBUTING.md
+    about: Local setup, PR expectations, safety rules, and release checks.
