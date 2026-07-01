@@ -64,4 +64,6 @@ jobs:
           python -m pip install pyinstaller
 
       - name: Run release smoke
+        env:
+          AUTHKIT_SKIP_GUI_SMOKE: "1"
         run: python scripts\release_smoke.py

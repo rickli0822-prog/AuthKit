@@ -7,6 +7,7 @@ mutating Windows repair settings.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 import tempfile
@@ -61,7 +62,10 @@ def _wheel_install_smoke() -> None:
         _run([str(authkit), "bundle", "--sample", "--client", "codex", "--out", str(sample_bundle)])
         _run([str(authkit), "bundle", "--validate", str(sample_bundle)])
         _run([str(scripts / _script_name("authkit-shortcut")), "--dry-run"])
-        _run([str(scripts / _script_name("authkit-gui")), "--smoke"])
+        if os.environ.get("AUTHKIT_SKIP_GUI_SMOKE") == "1":
+            print("Skipping installed GUI smoke because AUTHKIT_SKIP_GUI_SMOKE=1.")
+        else:
+            _run([str(scripts / _script_name("authkit-gui")), "--smoke"])
 
 
 def _run(command: list[str]) -> subprocess.CompletedProcess[str]:

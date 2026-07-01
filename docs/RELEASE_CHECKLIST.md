@@ -48,6 +48,11 @@ python scripts\release_smoke.py --skip-tests
 Do not use `--skip-tests` for a manual field handoff unless there is a nearby
 record of the full test run.
 
+The GitHub Actions release-smoke job sets `AUTHKIT_SKIP_GUI_SMOKE=1` because
+hosted Windows runners are not a reliable interactive desktop environment.
+Manual release handoff must not set this variable; local release verification
+should keep `authkit-gui --smoke` enabled.
+
 ## Manual Checks Still Needed
 
 The smoke gate is intentionally non-mutating. It does not create desktop
