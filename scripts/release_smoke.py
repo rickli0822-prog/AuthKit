@@ -17,7 +17,14 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
+def _configure_stdio() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 def main(argv: list[str] | None = None) -> int:
+    _configure_stdio()
     parser = argparse.ArgumentParser(description="Run AuthKit release smoke checks")
     parser.add_argument("--skip-tests", action="store_true", help="skip pytest when a prior full test run is already available")
     args = parser.parse_args(argv)
@@ -69,10 +76,14 @@ def _wheel_install_smoke() -> None:
 
 
 def _run(command: list[str]) -> subprocess.CompletedProcess[str]:
-    print(f"> {' '.join(command)}")
+    _safe_print(f"> {' '.join(command)}")
+    env = os.environ.copy()
+    env.setdefault("PYTHONUTF8", "1")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
     completed = subprocess.run(
         command,
         cwd=REPO_ROOT,
+        env=env,
         text=True,
         encoding="utf-8",
         errors="replace",
@@ -81,10 +92,20 @@ def _run(command: list[str]) -> subprocess.CompletedProcess[str]:
         check=False,
     )
     if completed.stdout:
-        print(completed.stdout.rstrip())
+        _safe_print(completed.stdout.rstrip())
     if completed.returncode != 0:
         raise RuntimeError(f"Command failed with exit code {completed.returncode}: {' '.join(command)}")
     return completed
+
+
+def _safe_print(text: str, *, file=None) -> None:
+    stream = file or sys.stdout
+    try:
+        print(text, file=stream)
+    except UnicodeEncodeError:
+        encoding = getattr(stream, "encoding", None) or "utf-8"
+        safe = text.encode(encoding, errors="replace").decode(encoding, errors="replace")
+        print(safe, file=stream)
 
 
 def _venv_python(venv_dir: Path) -> Path:
