@@ -12,7 +12,7 @@ token values.
 [![Release](https://img.shields.io/github/v/release/rickli0822-prog/AuthKit)](https://github.com/rickli0822-prog/AuthKit/releases/latest)
 [![License](https://img.shields.io/github/license/rickli0822-prog/AuthKit)](LICENSE)
 
-![AuthKit desktop workbench](docs/assets/authkit-main-workbench.png)
+![AuthKit desktop workbench](docs/assets/authkit-main-workbench-v2.png)
 
 ## Download
 
