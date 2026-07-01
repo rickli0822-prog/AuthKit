@@ -1,13 +1,54 @@
 from pathlib import Path
-import tomllib
+import re
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 compatibility.
+    tomllib = None
 
 from authkit.brand import ICON_ICO, ICON_PNG_48
 from authkit.ui.app import _asset_path
 
 
-def test_i18n_json_declared_as_package_data():
+def _load_pyproject() -> dict[str, dict[str, dict[str, object]]]:
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    text = pyproject.read_text(encoding="utf-8")
+    if tomllib is not None:
+        return tomllib.loads(text)
+
+    def array_value(key: str) -> list[str]:
+        match = re.search(rf'(?m)^"{re.escape(key)}"\s*=\s*\[([^\]]*)\]', text)
+        if not match:
+            raise AssertionError(f"missing package-data entry: {key}")
+        return re.findall(r'"([^"]+)"', match.group(1))
+
+    def script_value(key: str) -> str:
+        match = re.search(rf'(?m)^{re.escape(key)}\s*=\s*"([^"]+)"', text)
+        if not match:
+            raise AssertionError(f"missing script entry: {key}")
+        return match.group(1)
+
+    return {
+        "tool": {
+            "setuptools": {
+                "package-data": {
+                    "authkit.i18n": array_value("authkit.i18n"),
+                    "authkit": array_value("authkit"),
+                }
+            }
+        },
+        "project": {
+            "scripts": {
+                "authkit": script_value("authkit"),
+                "authkit-gui": script_value("authkit-gui"),
+                "authkit-shortcut": script_value("authkit-shortcut"),
+            }
+        },
+    }
+
+
+def test_i18n_json_declared_as_package_data():
+    data = _load_pyproject()
 
     package_data = data["tool"]["setuptools"]["package-data"]
 
@@ -15,8 +56,7 @@ def test_i18n_json_declared_as_package_data():
 
 
 def test_gui_assets_declared_as_package_data():
-    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    data = _load_pyproject()
 
     package_data = data["tool"]["setuptools"]["package-data"]
 
@@ -25,8 +65,7 @@ def test_gui_assets_declared_as_package_data():
 
 
 def test_installed_shortcut_entrypoint_declared():
-    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    data = _load_pyproject()
 
     scripts = data["project"]["scripts"]
 
