@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+artifacts/
+.agents/
+.codex/
+MEMORY.md
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 编辑器与系统
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini
+
+# 本地日志
+authkit-gui.log

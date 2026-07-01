@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 故障分类说明
+    url: https://github.com/YOUR_USERNAME/authkit/blob/main/docs/diagnosis-cases.md
+    about: 查看 Case A–F 与常见修复方式
+  - name: 贡献指南
+    url: https://github.com/YOUR_USERNAME/authkit/blob/main/CONTRIBUTING.md
+    about: 如何本地开发与提交 PR

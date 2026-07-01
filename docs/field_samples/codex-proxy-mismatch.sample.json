@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "kind": "authkit_support_bundle",
+  "client": "codex",
+  "metadata": {
+    "bundle_id": "sample-codex-proxy-mismatch",
+    "generated_at_utc": "2026-07-01T00:00:00+00:00",
+    "authkit_version": "0.4.0",
+    "client": "codex",
+    "locale": "en",
+    "audit_limit": 5,
+    "audit_records_included": 1,
+    "fast": true,
+    "diagnosis_status": "warning",
+    "diagnosis_case": "A",
+    "platform": "win32",
+    "python_version": "3.12.0",
+    "sample": true,
+    "expected": {
+      "client": "codex",
+      "diagnosis_status": "warning",
+      "diagnosis_case": "A",
+      "repair_fix_id": "sync-system-proxy"
+    }
+  },
+  "privacy": {
+    "redaction_applied": true,
+    "rules": [
+      "secret-like values are redacted",
+      "URL credentials are redacted",
+      "current user profile paths are normalized"
+    ]
+  },
+  "diagnosis": {
+    "tool_version": "0.4.0",
+    "platform": "Windows",
+    "client": "codex",
+    "status": "warning",
+    "diagnosis": {
+      "case": "A",
+      "root_cause": "Codex proxy points at a different local port than the reachable Windows proxy.",
+      "confidence": "sample",
+      "browser_explanation": "Browser access may work because Windows proxy is reachable, while the AI client is pinned to a stale local proxy port."
+    },
+    "layers": [
+      {
+        "name": "system_proxy",
+        "ok": true,
+        "summary": "Windows proxy endpoint is reachable",
+        "details": {
+          "endpoint": {
+            "scheme": "http",
+            "host": "127.0.0.1",
+            "port": 7890,
+            "raw": "http://127.0.0.1:7890"
+          }
+        }
+      },
+      {
+        "name": "env_proxy",
+        "ok": false,
+        "summary": "User environment proxy points to a stale port",
+        "details": {
+          "endpoint": {
+            "scheme": "http",
+            "host": "127.0.0.1",
+            "port": 9999,
+            "raw": "http://127.0.0.1:9999"
+          },
+          "config_path": "%USERPROFILE%\\.codex\\config.json"
+        }
+      }
+    ],
+    "fixes": [
+      {
+        "fix_id": "sync-system-proxy",
+        "description": "Sync Windows system proxy to the reachable local proxy.",
+        "command": "authkit fix --apply --client codex",
+        "risk": "medium",
+        "auto_applicable": true,
+        "admin_required": false,
+        "restart_required": false,
+        "rollback_supported": true,
+        "audit_required": true
+      }
+    ],
+    "notes": [
+      "sample_bundle=true"
+    ],
+    "official_guidance": []
+  },
+  "repair_audit": [
+    {
+      "repair_id": "sample-repair",
+      "timestamp": "2026-07-01T00:01:00+00:00",
+      "fix_id": "sync-system-proxy",
+      "client": "codex",
+      "before": {
+        "system_proxy": {
+          "ProxyServer": "http://127.0.0.1:9999"
+        }
+      },
+      "after": {
+        "system_proxy": {
+          "ProxyServer": "http://127.0.0.1:7890"
+        }
+      },
+      "changed_keys": [
+        "ProxyServer"
+      ],
+      "rollback_supported": true,
+      "status": "success",
+      "risk": "medium",
+      "admin_required": false,
+      "restart_required": false,
+      "message": "Sample repair audit record.",
+      "error": "",
+      "warnings": [],
+      "schema_version": 1,
+      "authkit_version": "0.4.0",
+      "platform": "win32"
+    }
+  ]
+}

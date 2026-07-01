@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "authkit"
+version = "0.4.0"
+description = "AuthKit — diagnose and fix AI client OAuth login and proxy issues on Windows"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "AuthKit contributors" }]
+keywords = ["authkit", "codex", "cursor", "proxy", "oauth", "windows", "diagnostics", "login-fix"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Environment :: Win32 (GUI)",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: System :: Networking",
+  "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pillow>=10.0"]
+
+[project.scripts]
+authkit = "authkit.cli:main"
+authkit-gui = "authkit.ui.app:main"
+authkit-shortcut = "authkit.shortcut:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"authkit.i18n" = ["*.json"]
+"authkit" = ["assets/*.png", "assets/*.ico"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
